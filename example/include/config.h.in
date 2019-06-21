@@ -1,0 +1,3 @@
+
+#cmakedefine BUILD_FOR_AMIGADOS
+#cmakedefine AMIGACROSS
