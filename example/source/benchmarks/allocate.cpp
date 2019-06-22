@@ -1,5 +1,5 @@
 /*
- * pointer.cpp
+ * allocate.cpp
  *
  *  Created on: 13.06.2019
  *      Author: andre

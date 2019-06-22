@@ -16,6 +16,5 @@ floppy_drive_0_sounds = 0
 floppy_drive_1_sounds = 0
 keep_aspect = 1
 stereo_separation = 30
-#shader = /home/andre/GIT/fs-uae/share/fs-uae/shaders/horizontal-blur.shader
 window_width = 1448
 window_height = 1080

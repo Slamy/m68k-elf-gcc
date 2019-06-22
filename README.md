@@ -24,6 +24,11 @@ So I decided to dive a little bit deeper and try to create my own m68k-elf-gcc t
 	- Deactivation of exceptions. (Unwind code takes up much space. Exceptions leads to abort() in this case)
 	- Usage of stream type operators (like std::cout) is highly discouraged as it wastes about 300kB of memory. For systems with lots of FastRAM this might not be a big issue. But for A500 development the newlib-nano implementation of printf is much better suited. In The example project those can be enabled optionally to see the difference.
 
+## Parts of this project which was fetched from other projects
+
+- DDE5-BootLoader.S is a BootLoader and Floppy driver by [Photon](http://coppershade.org/asmskool/SOURCES/Photon-snippets/DDE5-BootLoader.S).
+- make-adf.py and sum-bootblock.py is from [this bootloader project](https://github.com/deplinenoise/trackloader).
+
 ## Prerequisites
 
 - A linux machine as Windows support won't be tested by me. But feel free to inform me about successes.

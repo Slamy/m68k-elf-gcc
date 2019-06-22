@@ -1,6 +1,4 @@
-#!/bin/bash
-
-set -e
+#!/bin/bash -e
 
 # Build for AmigaDOS
 ./build.sh -DAMIGACROSS=1 -DBUILD_FOR_AMIGADOS=1

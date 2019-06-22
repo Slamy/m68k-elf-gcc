@@ -1,3 +1,10 @@
+/*
+ * main.cpp
+ *
+ *  Created on: 22.06.2019
+ *      Author: andre
+ */
+
 #include "config.h"
 
 #ifndef DISABLE_STREAMCLASS
@@ -82,38 +89,13 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-// Only useful for GDB
-#if 0
-#ifndef BUILD_FOR_AMIGADOS
-void stub_putDebugChar(char c) /* write a single character      */
-{
-	uart_printChar(c);
-}
-
-int stub_getDebugChar() /* read and return a single char */
-{
-	return uart_blockedGetChar();
-}
-
-typedef void (*ExceptionHook)(int); /* pointer to function with int parm */
-
-void exceptionHandler(int id, void* ptr) /* assign an exception handler */
-{
-	// PRINTF("exceptionHandler %d\n",id);
-	*(volatile uint32_t*)(id * 4) = (uint32_t)ptr;// set level 5 interrupt handler
-}
-
-ExceptionHook exceptionHook = 0; /* hook variable for errors/exceptions */
-#endif
-#endif
-
+// FIXME can this be removed?
 // Sorgt dafür, dass exception demangling nicht eingelinkt wird!
 // https://developer.mbed.org/forum/platform-32-ST-Nucleo-L152RE-community/topic/4802/?page=2#comment-25593
 namespace __gnu_cxx
 {
 void __verbose_terminate_handler()
 {
-	// uart_puts((const char*)"NOOO1!!\n");
 	for (;;)
 		;
 }
@@ -121,7 +103,6 @@ void __verbose_terminate_handler()
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void __cxa_pure_virtual(void)
 {
-	// uart_puts((const char*)"NOOO2!!\n");
 	for (;;)
 		;
 }

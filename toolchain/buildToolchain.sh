@@ -19,7 +19,7 @@ export PATH=$PATH:$HOSTINSTALLPATH/bin/
 function fetchAndExtract()
 {
 	url=$1
-	file=$(echo $url | sed -e 's/.*\/\(.*\)/\1/')
+	file=$(echo $url | sed -E 's#.*/(.*)#\1#')
 	folder=$2
 	
 	if [ ! -d "$folder" ]; then

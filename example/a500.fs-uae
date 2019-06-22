@@ -15,7 +15,6 @@ kickstart_file = kick13.rom
 automatic-input-grab = 0
 keep_aspect = 1
 stereo_separation = 30
-#shader = /home/andre/GIT/fs-uae/share/fs-uae/shaders/horizontal-blur.shader
 window_width = 1448
 window_height = 1080
 slow_memory = 0

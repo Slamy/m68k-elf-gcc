@@ -1,11 +1,10 @@
-#!/bin/bash
-PROJECT=example
+#!/bin/bash -e
 
-set -e
+PROJECT=example
 
 rm -rf ../${PROJECT}_build
 
 mkdir ../${PROJECT}_build
 cd ../${PROJECT}_build
 cmake -G "Eclipse CDT4 - Unix Makefiles" $* ../$PROJECT
-make -j4
+make -j$(nproc)

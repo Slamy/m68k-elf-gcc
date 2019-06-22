@@ -1,5 +1,5 @@
 /*
- * strings.cpp
+ * stringtests.cpp
  *
  *  Created on: 13.06.2019
  *      Author: andre
