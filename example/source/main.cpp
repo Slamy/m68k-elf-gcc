@@ -5,13 +5,14 @@
 #endif
 
 #include "measure.h"
-#include <algorithm>
 #include <iomanip>
 #include <list>
 #include <numeric>
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+
+#include <algorithm> //algorithm must be included latest for bebbo toolchain
 
 #include "allocate.h"
 #include "iterating.h"

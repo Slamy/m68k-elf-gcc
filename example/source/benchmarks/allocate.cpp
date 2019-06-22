@@ -7,11 +7,10 @@
 
 #include "multiplatform.h"
 
-#include "measure.h"
-#include <algorithm>
-#include <allocate.h>
+#include <array>
 #include <functional>
 #include <iomanip>
+#include <list>
 #include <memory>
 #include <numeric>
 #include <sstream>
@@ -19,6 +18,11 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+
+#include <algorithm> //algorithm must be included latest for bebbo toolchain
+
+#include "measure.h"
+#include <allocate.h>
 
 constexpr int numberOfElements = 30;
 

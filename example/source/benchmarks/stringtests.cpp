@@ -7,17 +7,22 @@
 
 #include "multiplatform.h"
 
-#include "iterating.h"
-#include "measure.h"
-#include "stringtests.h"
-#include <algorithm>
+#include <array>
+#include <list>
+#include <vector>
+
 #include <functional>
 #include <iomanip>
 #include <numeric>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vector>
+
+#include <algorithm> //algorithm must be included latest for bebbo toolchain
+
+#include "iterating.h"
+#include "measure.h"
+#include "stringtests.h"
 
 int benchmark_strings::nums[4];
 

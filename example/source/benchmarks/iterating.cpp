@@ -5,12 +5,11 @@
  *      Author: andre
  */
 
-#include "measure.h"
 #include "multiplatform.h"
-#include <algorithm>
+
 #include <functional>
 #include <iomanip>
-#include <list>
+#include <memory>
 #include <numeric>
 #include <sstream>
 #include <stdio.h>
@@ -18,7 +17,10 @@
 #include <string>
 #include <vector>
 
+#include <algorithm> //algorithm must be included latest for bebbo toolchain
+
 #include "iterating.h"
+#include "measure.h"
 
 int benchmark_iterating::arraySum_ppi()
 {
