@@ -5,16 +5,19 @@ project (cppexample C CXX ASM)
 
 option(AMIGACROSS "Build for Amiga" true)
 option(BUILD_FOR_AMIGADOS "Build for Amiga DOS" false)
+option(DISABLE_STREAMCLASS "Disable iostream and stringstream" true)
 
 include_directories(include)
+include_directories(include/util)
+include_directories(include/benchmarks)
 include_directories(${CMAKE_BINARY_DIR})
 
 SET (SOURCES
 	source/main.cpp
-	source/iterating.cpp
-	source/allocate.cpp
-	source/iterating.cpp
-	source/strings.cpp
+	source/benchmarks/iterating.cpp
+	source/benchmarks/allocate.cpp
+	source/benchmarks/iterating.cpp
+	source/benchmarks/stringtests.cpp
 )
 
 #create listing files
@@ -45,7 +48,7 @@ if (AMIGACROSS)
 		SET (OPTIMIZE_FLAGS "-O3 -fomit-frame-pointer ")
 	
 		SET(CMAKE_C_FLAGS " -noixemul -Wall ${OPTIMIZE_FLAGS}  ")
-		SET(CMAKE_CXX_FLAGS " -noixemul -Wall ${OPTIMIZE_FLAGS} -Iinclude -fno-exceptions")
+		SET(CMAKE_CXX_FLAGS " -noixemul -Wall ${OPTIMIZE_FLAGS} -Iinclude -fno-exceptions ")
 
 		SET(CMAKE_LINK_FLAGS " -noixemul -Wl,-Map=amibench.map ")
 	
@@ -78,8 +81,8 @@ if (AMIGACROSS)
 		
 		SET (SOURCES
 			${SOURCES}
-			source/bm_newlib.c
-			source/bm_uart.c
+			source/util/syscalls.c
+			source/util/uart.c
 		)
 		#source/gdb-m68k-stub.c
 		
@@ -94,7 +97,7 @@ if (AMIGACROSS)
 	set(CMAKE_OBJCOPY 		"${TOOLCHAIN_DIR}/${TARGET_TRIPLET}-objcopy")
 	set(CMAKE_OBJDUMP 		"${TOOLCHAIN_DIR}/${TARGET_TRIPLET}-objdump")
 	
-	add_executable(amibench ${SOURCES} source/measure_amiga.cpp)
+	add_executable(amibench ${SOURCES} source/util/measure_amiga.cpp)
 	
 	if (BUILD_FOR_AMIGADOS)
 		add_custom_command(TARGET amibench POST_BUILD
@@ -130,7 +133,8 @@ if (AMIGACROSS)
 
 else()
 	MESSAGE( STATUS "Build for linux")
-	add_executable(linbench ${SOURCES} source/measure_linux.cpp)
+	SET(CMAKE_CXX_FLAGS "-Wall")
+	add_executable(linbench ${SOURCES} source/util/measure_linux.cpp)
 endif()
 
 configure_file(include/config.h.in config.h)

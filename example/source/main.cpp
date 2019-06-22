@@ -1,5 +1,9 @@
-#include <sstream>
-#include <string>
+#include "config.h"
+
+#ifndef DISABLE_STREAMCLASS
+#include <iostream>
+#endif
+
 #include <list>
 #include <vector>
 #include <algorithm>
@@ -9,19 +13,15 @@
 #include "measure.h"
 #include <iomanip>
 
-#include "testSubFunc.h"
 #include "iterating.h"
 #include "allocate.h"
-#include <stringtests.h>
-
-#include "config.h"
+#include "stringtests.h"
 
 extern "C"
 {
-	#include "uart.h"
-	#include "gdb-m68k-stub.h"
+#include "uart.h"
+#include "gdb-m68k-stub.h"
 }
-
 
 #if defined(AMIGACROSS) && !defined(BUILD_FOR_AMIGADOS)
 /*
@@ -43,7 +43,7 @@ void staticConstructors()
 	while (*ptr)
 	{
 		void (*func)() = (void(*)())*ptr;
-		printf("Execute static constructor %lx\n",*ptr);
+		printf("Execute static constructor %lx\n", *ptr);
 		func();
 
 		ptr++;
@@ -73,7 +73,6 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-
 //Only useful for GDB
 #if 0
 #ifndef BUILD_FOR_AMIGADOS
@@ -89,30 +88,32 @@ int stub_getDebugChar() /* read and return a single char */
 
 typedef void (*ExceptionHook)(int); /* pointer to function with int parm */
 
-
 void exceptionHandler(int id, void* ptr) /* assign an exception handler */
 {
 	// PRINTF("exceptionHandler %d\n",id);
-	*(volatile uint32_t*)(id * 4) = (uint32_t)ptr; // set level 5 interrupt handler
+	*(volatile uint32_t*)(id * 4) = (uint32_t)ptr;// set level 5 interrupt handler
 }
 
 ExceptionHook exceptionHook = 0; /* hook variable for errors/exceptions */
 #endif
 #endif
 
-
 //Sorgt dafür, dass exception demangling nicht eingelinkt wird!
 //https://developer.mbed.org/forum/platform-32-ST-Nucleo-L152RE-community/topic/4802/?page=2#comment-25593
-namespace __gnu_cxx {
-    void __verbose_terminate_handler() {
-    	//uart_puts((const char*)"NOOO1!!\n");
-    	for(;;);
-    }
+namespace __gnu_cxx
+{
+void __verbose_terminate_handler()
+{
+	//uart_puts((const char*)"NOOO1!!\n");
+	for (;;)
+		;
+}
 }
 extern "C" void __cxa_pure_virtual(void);
-extern "C" void __cxa_pure_virtual(void) {
+extern "C" void __cxa_pure_virtual(void)
+{
 	//uart_puts((const char*)"NOOO2!!\n");
-	for(;;);
+	for (;;)
+		;
 }
-
 

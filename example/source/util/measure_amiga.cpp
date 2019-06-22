@@ -20,13 +20,13 @@ extern "C"
 
 #ifndef BUILD_FOR_AMIGADOS
 
-volatile struct Custom* const custom = (volatile struct Custom*)0xDFF000;
-volatile struct CIA* const ciaa		 = (volatile struct CIA*)0xbfe001;
+volatile struct Custom* const custom = (volatile struct Custom*) 0xDFF000;
+volatile struct CIA* const ciaa = (volatile struct CIA*) 0xbfe001;
 
 #else
 
 volatile struct Custom* mycustom = (volatile struct Custom*)0xDFF000;
-volatile struct CIA* myciaa		 = (volatile struct CIA*)0xbfe001;
+volatile struct CIA* myciaa = (volatile struct CIA*)0xbfe001;
 
 #endif
 //extern struct CIA ciaa, ciab;

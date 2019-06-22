@@ -1,5 +1,5 @@
 /*
- * newlib.c
+ * syscalls.c
  *
  *  Created on: 22.09.2018
  *      Author: andre
@@ -31,7 +31,7 @@ _READ_WRITE_RETURN_TYPE write(int f, const void *b, size_t s)
 
 void _exit(int rc)
 {
-	uart_printf("exitcode %d\n",rc);
+	uart_printf("exitcode %d\n", rc);
 
 	for (;;)
 		;
@@ -81,22 +81,19 @@ void *sbrk(ptrdiff_t nbytes)
 	/* The statically held previous end of the heap, with its initialization. */
 	static int *heap_ptr = (void *) &_end; /* Previous end */
 
-	uart_printf("sbrk %d %x %x %x\n", nbytes, (int) heap_ptr,
-			(int) &stack_start, &_end);
+	//uart_printf("sbrk %d %x %x %x\n", nbytes, (int) heap_ptr, (int) &stack_start, &_end);
 
-	//if ((heap_ptr + nbytes) < (&_end + 400))
 	if ((heap_ptr + nbytes) < &stack_start)
-	//if (1)
 	{
 		void *base = heap_ptr;
 		heap_ptr += nbytes;
-		uart_printf("sbrk accepted!\n");
+		//uart_printf("sbrk accepted!\n");
 		return base;
 	}
 	else
 	{
 		errno = ENOMEM;
-		uart_printf("sbrk failed!\n");
+		//uart_printf("sbrk failed!\n");
 		return (void *) -1;
 	}
 } /* _sbrk () */

@@ -25,5 +25,4 @@ void measure_end()
 	elapsedTime = (tEnd.tv_sec - tStart.tv_sec) * 1000.0 * 1000.0;  // sec to us
 	elapsedTime += (tEnd.tv_usec - tStart.tv_usec);
 
-
 }

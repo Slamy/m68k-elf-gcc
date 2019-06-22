@@ -22,7 +22,7 @@
 constexpr int numberOfElements = 1000;
 
 int nums[numberOfElements];
-std::array<int,numberOfElements> cpparraynums;
+std::array<int, numberOfElements> cpparraynums;
 std::vector<int> vecnums;
 std::list<int> listnums;
 
@@ -88,7 +88,7 @@ int vectorSum_iterator()
 	int sum = 0;
 
 	for (std::vector<int>::iterator it = vecnums.begin(); it != vecnums.end();
-				++it)
+			++it)
 	{
 		sum += *it;
 	}
@@ -102,7 +102,6 @@ int vectorSum_accumulate()
 	return sum;
 }
 
-
 int listSum_rangeloop()
 {
 	int sum = 0;
@@ -113,20 +112,18 @@ int listSum_rangeloop()
 	return sum;
 }
 
-
 int listSum_iterator()
 {
 	int sum = 0;
 
 	for (std::list<int>::iterator it = listnums.begin(); it != listnums.end();
-				++it)
+			++it)
 	{
 		sum += *it;
 	}
 
 	return sum;
 }
-
 
 void doSumTests()
 {
@@ -144,8 +141,7 @@ void doSumTests()
 	{ vectorSum_iterator, "vectorsum - iterator" },
 	{ vectorSum_accumulate, "vectorsum - std::accumulate" },
 	{ listSum_rangeloop, "listsum - range loop" },
-	{ listSum_iterator, "listsum - iterator" },
-	};
+	{ listSum_iterator, "listsum - iterator" }, };
 
 	//printf("listnums size : %lu\n",listnums.size());
 	//printf("listnums size : %lu\n",listnums.size());
@@ -171,7 +167,8 @@ void doSumTests()
 		int result = i.func();
 		measure_end();
 
-		printf("%30s %6d %s\n",i.name, (int) elapsedTime,(result == sum ? "ok" : "invalid") );
+		printf("%30s %6d %s\n", i.name, (int) elapsedTime,
+				(result == sum ? "ok" : "invalid"));
 	}
 
 	printf("\n");

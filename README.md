@@ -18,15 +18,17 @@ So what is the issue then? I was thinking about if C++ could be used for develop
 - Working C++ examples
 - Downsizing of libstdc++ to save memorey
 	- Deactication of Exceptions
-	- Usage of streaming (like std::cout) is not possible as it wastes about 600kB of memory.
+	- Usage of stream type operators (like std::cout) is highly discouraged as it wastes about 300kB of memory. For systems with lots of FastRAM this might not be a big issue. But for A500 development the newlib-nano implementation of printf is much better suited.
 
 ## Prerequisites
 
 - A linux machine as Windows support won't be tested by me. But feel free to inform me about successes.
 - kick31.rom and kick13.rom must be placed in example for execution. I can't supply this for copyright reasons.
-- You need to install
-	- fs-uae
-	- build-essentials
+- You need to install some build-essentials
+	- sudo apt-get install  wget bzip2 git make tar flex bison diffutils texinfo gcc g++ libgmp-dev libmpc-dev libmpfr-dev libisl-dev
+- For testing you also need an Amiga emulator. fs-uae is my currently favoured solution
+    - sudo apt-get install fs-uae
+
 
 ## How to build the toolchain
 

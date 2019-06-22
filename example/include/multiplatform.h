@@ -30,20 +30,5 @@ extern volatile struct CIA* const ciaa;
 
 #endif
 
-#if 1
-#ifndef DEBUG_UART
-
-static inline void null_printf(const char* format, ...)
-{
-}
-
-#undef PRINTF
-#undef ASSERT
-
-#define PRINTF null_printf
-#define ASSERT(x)
-
-#endif
-#endif
 
 #endif /* INCLUDE_MULTIPLATFORM_H_ */

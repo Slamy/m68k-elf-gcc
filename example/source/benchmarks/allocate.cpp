@@ -19,7 +19,7 @@
 #include <iomanip>
 #include <memory>
 
-constexpr int numberOfElements = 20;
+constexpr int numberOfElements = 30;
 
 void c_pointer()
 {
@@ -41,7 +41,6 @@ void c_pointer()
 
 }
 
-#ifndef DEACTIVATE_LIBSTDCPP
 void cpp_pointer()
 {
 	int i;
@@ -105,7 +104,7 @@ void cpp_vectorUnique_reserved()
 		pointers.push_back(std::make_unique<int>());
 	}
 }
-#endif
+
 
 void doAllocationTests()
 {
@@ -126,14 +125,14 @@ void doAllocationTests()
 #endif
 	};
 
-	printf ("Allocate %d int pointers and manage them\n", numberOfElements);
+	printf("Allocate %d int pointers and manage them\n", numberOfElements);
 
 	for (auto i : stringtests)
 	{
 		measure_start();
 		i.func();
 		measure_end();
-		printf("%40s %6d\n",i.name, (int) elapsedTime);
+		printf("%40s %6d\n", i.name, (int) elapsedTime);
 	}
 
 	printf("\n");
