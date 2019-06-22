@@ -43,7 +43,7 @@ void staticConstructors()
 	while (*ptr)
 	{
 		void (*func)() = (void(*)())*ptr;
-		printf("Execute static constructor %lx\n", *ptr);
+		//printf("Execute static constructor %lx\n", *ptr);
 		func();
 
 		ptr++;
@@ -55,6 +55,8 @@ void *__dso_handle;
 
 #endif
 
+benchmark_iterating iteratingGlobal;
+
 int main(int argc, char **argv)
 {
 	//set_debug_traps();
@@ -64,9 +66,16 @@ int main(int argc, char **argv)
 
 	printf("Slamy's Litte C vs C++ Benchmark\n");
 
-	doSumTests();
-	doStringTests();
-	doAllocationTests();
+	std::vector<std::unique_ptr<benchmark>> bmarks;
+
+	bmarks.push_back(std::make_unique<benchmark_allocate>());
+	bmarks.push_back(std::make_unique<benchmark_strings>());
+	bmarks.push_back(std::make_unique<benchmark_iterating>());
+
+	std::for_each(bmarks.begin(), bmarks.end(), [](auto& i)
+	{	i->execute();});
+
+	iteratingGlobal.execute();
 
 	printMemoryUsage();
 

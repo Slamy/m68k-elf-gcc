@@ -7,15 +7,10 @@
 
 #include "multiplatform.h"
 
-#ifndef DISABLE_STREAMCLASS
-#include <iostream>
-#include <sstream>
-#include <string>
-#endif
-
 #include <vector>
 #include <string.h>
 #include <algorithm>
+#include <functional>
 #include <numeric>
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,11 +19,9 @@
 #include "stringtests.h"
 #include "iterating.h"
 
-static int nums[4];
+int benchmark_strings::nums[4];
 
-char strAr[100];
-
-void carr_build()
+void benchmark_strings::carr_build()
 {
 	sprintf(strAr, "%d %d %d %d", nums[0], nums[1], nums[2], nums[3]);
 }
@@ -36,24 +29,24 @@ void carr_build()
 #ifndef DISABLE_STREAMCLASS
 std::stringstream cppstrstr;
 
-void stringstream_build()
+void benchmark_strings::stringstream_build()
 {
 	cppstrstr << nums[0] << " " << nums[1] << " " << nums[2] << " " << nums[3];
 }
 
 #endif
 
-void doStringTests()
+void benchmark_strings::execute()
 {
 	const struct
 	{
-		void (*func)();
+		std::function<void(benchmark_strings&)> func;
 		const char* name;
 	} stringtests[] =
 	{
-	{ carr_build, "sprintf" },
+	{ &benchmark_strings::carr_build, "sprintf" },
 #ifndef DISABLE_STREAMCLASS
-			{	stringstream_build, "c++ stringstream build"},
+			{	&benchmark_strings::stringstream_build, "c++ stringstream build"},
 #endif
 		};
 
@@ -70,7 +63,7 @@ void doStringTests()
 	for (auto i : stringtests)
 	{
 		measure_start();
-		i.func();
+		i.func(*this);
 		measure_end();
 		printf("%30s %6d\n", i.name, (int) elapsedTime);
 	}

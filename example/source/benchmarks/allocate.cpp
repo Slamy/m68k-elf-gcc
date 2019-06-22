@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <numeric>
 #include <stdlib.h>
+#include <functional>
 #include <stdio.h>
 #include "measure.h"
 #include <iomanip>
@@ -21,7 +22,7 @@
 
 constexpr int numberOfElements = 30;
 
-void c_pointer()
+void benchmark_allocate::c_pointer()
 {
 	int i;
 	int *pointers[numberOfElements];
@@ -41,7 +42,7 @@ void c_pointer()
 
 }
 
-void cpp_pointer()
+void benchmark_allocate::cpp_pointer()
 {
 	int i;
 	int *pointers[numberOfElements];
@@ -60,7 +61,7 @@ void cpp_pointer()
 		delete pointers[i];
 }
 
-void cpp_unique()
+void benchmark_allocate::cpp_unique()
 {
 	int i;
 	std::unique_ptr<int> pointers[numberOfElements];
@@ -71,7 +72,7 @@ void cpp_unique()
 	}
 }
 
-void cpp_shared()
+void benchmark_allocate::cpp_shared()
 {
 	int i;
 	std::shared_ptr<int> pointers[numberOfElements];
@@ -82,7 +83,7 @@ void cpp_shared()
 	}
 }
 
-void cpp_vectorUnique()
+void benchmark_allocate::cpp_vectorUnique()
 {
 	int i;
 	std::vector<std::unique_ptr<int>> pointers;
@@ -93,7 +94,7 @@ void cpp_vectorUnique()
 	}
 }
 
-void cpp_vectorUnique_reserved()
+void benchmark_allocate::cpp_vectorUnique_reserved()
 {
 	int i;
 	std::vector<std::unique_ptr<int>> pointers;
@@ -106,23 +107,32 @@ void cpp_vectorUnique_reserved()
 }
 
 
-void doAllocationTests()
+void benchmark_allocate::cpp_vectorUnique_presized()
+{
+	int i;
+	std::vector<std::unique_ptr<int>> pointers(numberOfElements);
+
+	for (i = 0; i < numberOfElements; i++)
+	{
+		pointers.at(i)=std::make_unique<int>();
+	}
+}
+
+void benchmark_allocate::execute()
 {
 	static const struct
 	{
-		void (*func)();
+		std::function<void(benchmark_allocate&)> func;
 		const char *name;
 	} stringtests[] =
 	{
-	{ c_pointer, "c array of malloc'd pointers" },
-#ifndef DEACTIVATE_LIBSTDCPP
-	{ cpp_pointer, "c array of new'd pointers" },
-	{ cpp_unique, "c array of unique pointers" },
-
-	{ cpp_vectorUnique_reserved, "reserved c++ vector of unique pointers" },
-	{ cpp_shared, "c array of shared pointers" },
-	{ cpp_vectorUnique, "c++ vector of unique pointers" },
-#endif
+	{ &benchmark_allocate::c_pointer, "c array of malloc'd pointers" },
+	{ &benchmark_allocate::cpp_pointer, "c array of new'd pointers" },
+	{ &benchmark_allocate::cpp_unique, "c array of unique pointers" },
+	{ &benchmark_allocate::cpp_vectorUnique_reserved, "reserve c++ vector of unique pointers" },
+	{ &benchmark_allocate::cpp_vectorUnique_presized, "presized c++ vector of unique pointers" },
+	{ &benchmark_allocate::cpp_shared, "c array of shared pointers" },
+	{ &benchmark_allocate::cpp_vectorUnique, "c++ vector of unique pointers" },
 	};
 
 	printf("Allocate %d int pointers and manage them\n", numberOfElements);
@@ -130,7 +140,7 @@ void doAllocationTests()
 	for (auto i : stringtests)
 	{
 		measure_start();
-		i.func();
+		i.func(*this);
 		measure_end();
 		printf("%40s %6d\n", i.name, (int) elapsedTime);
 	}

@@ -8,7 +8,35 @@
 #ifndef ITERATING_H_
 #define ITERATING_H_
 
-void doSumTests();
+#include "benchmark.h"
+#include <array>
+#include <vector>
+#include <list>
+
+
+constexpr int numberOfElements = 1000;
+
+class benchmark_iterating : public benchmark
+{
+private:
+	int arraySum_ppi();
+	int arraySum_ipp();
+	int arraySum_rangeloop();
+	int vectorSum_rangeloop();
+	int vectorSum_foreach();
+	int vectorSum_iterator();
+	int vectorSum_accumulate();
+	int listSum_rangeloop();
+	int listSum_iterator();
+
+	int nums[numberOfElements];
+	std::array<int, numberOfElements> cpparraynums;
+	std::vector<int> vecnums;
+	std::list<int> listnums;
+
+public:
+	void execute();
+};
 
 
 #endif /* ITERATING_H_ */

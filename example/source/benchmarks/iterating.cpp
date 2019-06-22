@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <functional>
 #include <list>
 #include <algorithm>
 #include <numeric>
@@ -19,14 +20,9 @@
 
 #include "iterating.h"
 
-constexpr int numberOfElements = 1000;
 
-int nums[numberOfElements];
-std::array<int, numberOfElements> cpparraynums;
-std::vector<int> vecnums;
-std::list<int> listnums;
 
-int arraySum_ppi()
+int benchmark_iterating::arraySum_ppi()
 {
 	size_t i;
 	int sum = 0;
@@ -38,7 +34,7 @@ int arraySum_ppi()
 	return sum;
 }
 
-int arraySum_ipp()
+int benchmark_iterating::arraySum_ipp()
 {
 	size_t i;
 	int sum = 0;
@@ -50,7 +46,7 @@ int arraySum_ipp()
 	return sum;
 }
 
-int arraySum_rangeloop()
+int benchmark_iterating::arraySum_rangeloop()
 {
 	int sum = 0;
 	for (auto i : nums)
@@ -61,7 +57,7 @@ int arraySum_rangeloop()
 	return sum;
 }
 
-int vectorSum_rangeloop()
+int benchmark_iterating::vectorSum_rangeloop()
 {
 	int sum = 0;
 	for (auto i : vecnums)
@@ -72,7 +68,7 @@ int vectorSum_rangeloop()
 	return sum;
 }
 
-int vectorSum_foreach()
+int benchmark_iterating::vectorSum_foreach()
 {
 	int sum = 0;
 	std::for_each(vecnums.begin(), vecnums.end(), [&] (int n)
@@ -83,7 +79,8 @@ int vectorSum_foreach()
 	return sum;
 }
 
-int vectorSum_iterator()
+
+int benchmark_iterating::vectorSum_iterator()
 {
 	int sum = 0;
 
@@ -96,13 +93,13 @@ int vectorSum_iterator()
 	return sum;
 }
 
-int vectorSum_accumulate()
+int benchmark_iterating::vectorSum_accumulate()
 {
 	int sum = std::accumulate(vecnums.begin(), vecnums.end(), 0);
 	return sum;
 }
 
-int listSum_rangeloop()
+int benchmark_iterating::listSum_rangeloop()
 {
 	int sum = 0;
 	for (auto i : listnums)
@@ -112,7 +109,7 @@ int listSum_rangeloop()
 	return sum;
 }
 
-int listSum_iterator()
+int benchmark_iterating::listSum_iterator()
 {
 	int sum = 0;
 
@@ -125,23 +122,23 @@ int listSum_iterator()
 	return sum;
 }
 
-void doSumTests()
+void benchmark_iterating::execute()
 {
 	const struct
 	{
-		int (*func)();
+		std::function<int(benchmark_iterating&)> func;
 		const char* name;
 	} sumtests[] =
 	{
-	{ arraySum_ipp, "arraysum - for i++" },
-	{ arraySum_ppi, "arraysum - for ++i" },
-	{ arraySum_rangeloop, "arraysum - range loop" },
-	{ vectorSum_rangeloop, "vectorsum - range loop" },
-	{ vectorSum_foreach, "vectorsum - std::for_each" },
-	{ vectorSum_iterator, "vectorsum - iterator" },
-	{ vectorSum_accumulate, "vectorsum - std::accumulate" },
-	{ listSum_rangeloop, "listsum - range loop" },
-	{ listSum_iterator, "listsum - iterator" }, };
+	{ &benchmark_iterating::arraySum_ipp, "arraysum - for i++" },
+	{ &benchmark_iterating::arraySum_ppi, "arraysum - for ++i" },
+	{ &benchmark_iterating::arraySum_rangeloop, "arraysum - range loop" },
+	{ &benchmark_iterating::vectorSum_rangeloop, "vectorsum - range loop" },
+	{ &benchmark_iterating::vectorSum_foreach, "vectorsum - std::for_each" },
+	{ &benchmark_iterating::vectorSum_iterator, "vectorsum - iterator" },
+	{ &benchmark_iterating::vectorSum_accumulate, "vectorsum - std::accumulate" },
+	{ &benchmark_iterating::listSum_rangeloop, "listsum - range loop" },
+	{ &benchmark_iterating::listSum_iterator, "listsum - iterator" }, };
 
 	//printf("listnums size : %lu\n",listnums.size());
 	//printf("listnums size : %lu\n",listnums.size());
@@ -164,7 +161,7 @@ void doSumTests()
 	for (auto i : sumtests)
 	{
 		measure_start();
-		int result = i.func();
+		int result = i.func(*this);
 		measure_end();
 
 		printf("%30s %6d %s\n", i.name, (int) elapsedTime,

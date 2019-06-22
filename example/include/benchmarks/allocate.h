@@ -1,14 +1,29 @@
 /*
- * pointers.h
+ * allocate.h
  *
  *  Created on: 13.06.2019
  *      Author: andre
  */
 
-#ifndef POINTERS_H_
-#define POINTERS_H_
+#ifndef ALLOCATE_H_
+#define ALLOCATE_H_
 
-void doAllocationTests();
+#include "benchmark.h"
+
+class benchmark_allocate : public benchmark
+{
+private:
+	void c_pointer();
+	void cpp_pointer();
+	void cpp_unique();
+	void cpp_shared();
+	void cpp_vectorUnique();
+	void cpp_vectorUnique_reserved();
+	void cpp_vectorUnique_presized();
+
+public:
+	void execute();
+};
 
 
-#endif /* POINTERS_H_ */
+#endif /* ALLOCATE_H_ */
