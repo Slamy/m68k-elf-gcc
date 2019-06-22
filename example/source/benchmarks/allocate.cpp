@@ -7,29 +7,29 @@
 
 #include "multiplatform.h"
 
-#include <allocate.h>
-#include <sstream>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <numeric>
-#include <stdlib.h>
-#include <functional>
-#include <stdio.h>
 #include "measure.h"
+#include <algorithm>
+#include <allocate.h>
+#include <functional>
 #include <iomanip>
 #include <memory>
+#include <numeric>
+#include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <vector>
 
 constexpr int numberOfElements = 30;
 
 void benchmark_allocate::c_pointer()
 {
 	int i;
-	int *pointers[numberOfElements];
+	int* pointers[numberOfElements];
 
 	for (i = 0; i < numberOfElements; i++)
 	{
-		pointers[i] = (int*) malloc(sizeof(int));
+		pointers[i] = (int*)malloc(sizeof(int));
 		if (pointers[i] == NULL)
 		{
 			printf("Failed to allocate memory\n");
@@ -39,13 +39,12 @@ void benchmark_allocate::c_pointer()
 
 	for (i = 0; i < numberOfElements; i++)
 		free(pointers[i]);
-
 }
 
 void benchmark_allocate::cpp_pointer()
 {
 	int i;
-	int *pointers[numberOfElements];
+	int* pointers[numberOfElements];
 
 	for (i = 0; i < numberOfElements; i++)
 	{
@@ -106,7 +105,6 @@ void benchmark_allocate::cpp_vectorUnique_reserved()
 	}
 }
 
-
 void benchmark_allocate::cpp_vectorUnique_presized()
 {
 	int i;
@@ -114,7 +112,7 @@ void benchmark_allocate::cpp_vectorUnique_presized()
 
 	for (i = 0; i < numberOfElements; i++)
 	{
-		pointers.at(i)=std::make_unique<int>();
+		pointers.at(i) = std::make_unique<int>();
 	}
 }
 
@@ -123,16 +121,15 @@ void benchmark_allocate::execute()
 	static const struct
 	{
 		std::function<void(benchmark_allocate&)> func;
-		const char *name;
-	} stringtests[] =
-	{
-	{ &benchmark_allocate::c_pointer, "c array of malloc'd pointers" },
-	{ &benchmark_allocate::cpp_pointer, "c array of new'd pointers" },
-	{ &benchmark_allocate::cpp_unique, "c array of unique pointers" },
-	{ &benchmark_allocate::cpp_vectorUnique_reserved, "reserve c++ vector of unique pointers" },
-	{ &benchmark_allocate::cpp_vectorUnique_presized, "presized c++ vector of unique pointers" },
-	{ &benchmark_allocate::cpp_shared, "c array of shared pointers" },
-	{ &benchmark_allocate::cpp_vectorUnique, "c++ vector of unique pointers" },
+		const char* name;
+	} stringtests[] = {
+		{&benchmark_allocate::c_pointer, "c array of malloc'd pointers"},
+		{&benchmark_allocate::cpp_pointer, "c array of new'd pointers"},
+		{&benchmark_allocate::cpp_unique, "c array of unique pointers"},
+		{&benchmark_allocate::cpp_vectorUnique_reserved, "reserve c++ vector of unique pointers"},
+		{&benchmark_allocate::cpp_vectorUnique_presized, "presized c++ vector of unique pointers"},
+		{&benchmark_allocate::cpp_shared, "c array of shared pointers"},
+		{&benchmark_allocate::cpp_vectorUnique, "c++ vector of unique pointers"},
 	};
 
 	printf("Allocate %d int pointers and manage them\n", numberOfElements);
@@ -142,7 +139,7 @@ void benchmark_allocate::execute()
 		measure_start();
 		i.func(*this);
 		measure_end();
-		printf("%40s %6d\n", i.name, (int) elapsedTime);
+		printf("%40s %6d\n", i.name, (int)elapsedTime);
 	}
 
 	printf("\n");

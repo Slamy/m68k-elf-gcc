@@ -16,9 +16,9 @@
 #include <string>
 #endif
 
-class benchmark_strings: public benchmark
+class benchmark_strings : public benchmark
 {
-private:
+  private:
 #ifndef DISABLE_STREAMCLASS
 	std::stringstream cppstrstr;
 	void stringstream_build();
@@ -29,11 +29,8 @@ private:
 	char strAr[100];
 	void carr_build();
 
-public:
+  public:
 	void execute();
-
 };
-
-
 
 #endif /* STRINGTESTSS_H_ */

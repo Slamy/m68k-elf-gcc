@@ -140,5 +140,9 @@ endif()
 configure_file(include/config.h.in config.h)
 
 
+add_custom_target(applyCodeStyle
+  COMMAND find -iname *.h -o -iname *.cpp -o -iname *.c | xargs clang-format -i
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 
 

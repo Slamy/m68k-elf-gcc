@@ -30,5 +30,4 @@ extern volatile struct CIA* const ciaa;
 
 #endif
 
-
 #endif /* INCLUDE_MULTIPLATFORM_H_ */

@@ -10,16 +10,14 @@
 
 class benchmark
 {
-public:
-	virtual void execute() {};
+  public:
+	virtual void execute(){};
 	benchmark()
 	{
-
 	}
 
 	virtual ~benchmark()
 	{
-
 	}
 };
 

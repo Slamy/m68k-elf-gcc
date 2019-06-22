@@ -4,23 +4,23 @@
 #include <iostream>
 #endif
 
-#include <list>
-#include <vector>
-#include <algorithm>
-#include <numeric>
-#include <stdlib.h>
-#include <stdio.h>
 #include "measure.h"
+#include <algorithm>
 #include <iomanip>
+#include <list>
+#include <numeric>
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
 
-#include "iterating.h"
 #include "allocate.h"
+#include "iterating.h"
 #include "stringtests.h"
 
 extern "C"
 {
-#include "uart.h"
 #include "gdb-m68k-stub.h"
+#include "uart.h"
 }
 
 #if defined(AMIGACROSS) && !defined(BUILD_FOR_AMIGADOS)
@@ -37,29 +37,29 @@ void staticConstructors()
 {
 	extern uint32_t __CTOR_LIST__;
 
-	uint32_t *ptr = &__CTOR_LIST__;
-	ptr++; //skip number of pointers
+	uint32_t* ptr = &__CTOR_LIST__;
+	ptr++; // skip number of pointers
 
 	while (*ptr)
 	{
-		void (*func)() = (void(*)())*ptr;
-		//printf("Execute static constructor %lx\n", *ptr);
+		void (*func)() = (void (*)()) * ptr;
+		// printf("Execute static constructor %lx\n", *ptr);
 		func();
 
 		ptr++;
 	}
 }
 
-//FIXME Why is this needed?
-void *__dso_handle;
+// FIXME Why is this needed?
+void* __dso_handle;
 
 #endif
 
 benchmark_iterating iteratingGlobal;
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-	//set_debug_traps();
+	// set_debug_traps();
 #if defined(AMIGACROSS) && !defined(BUILD_FOR_AMIGADOS)
 	staticConstructors();
 #endif
@@ -72,8 +72,7 @@ int main(int argc, char **argv)
 	bmarks.push_back(std::make_unique<benchmark_strings>());
 	bmarks.push_back(std::make_unique<benchmark_iterating>());
 
-	std::for_each(bmarks.begin(), bmarks.end(), [](auto& i)
-	{	i->execute();});
+	std::for_each(bmarks.begin(), bmarks.end(), [](auto& i) { i->execute(); });
 
 	iteratingGlobal.execute();
 
@@ -82,7 +81,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-//Only useful for GDB
+// Only useful for GDB
 #if 0
 #ifndef BUILD_FOR_AMIGADOS
 void stub_putDebugChar(char c) /* write a single character      */
@@ -107,22 +106,21 @@ ExceptionHook exceptionHook = 0; /* hook variable for errors/exceptions */
 #endif
 #endif
 
-//Sorgt dafür, dass exception demangling nicht eingelinkt wird!
-//https://developer.mbed.org/forum/platform-32-ST-Nucleo-L152RE-community/topic/4802/?page=2#comment-25593
+// Sorgt dafür, dass exception demangling nicht eingelinkt wird!
+// https://developer.mbed.org/forum/platform-32-ST-Nucleo-L152RE-community/topic/4802/?page=2#comment-25593
 namespace __gnu_cxx
 {
 void __verbose_terminate_handler()
 {
-	//uart_puts((const char*)"NOOO1!!\n");
+	// uart_puts((const char*)"NOOO1!!\n");
 	for (;;)
 		;
 }
-}
+} // namespace __gnu_cxx
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void __cxa_pure_virtual(void)
 {
-	//uart_puts((const char*)"NOOO2!!\n");
+	// uart_puts((const char*)"NOOO2!!\n");
 	for (;;)
 		;
 }
-

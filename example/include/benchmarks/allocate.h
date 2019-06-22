@@ -12,7 +12,7 @@
 
 class benchmark_allocate : public benchmark
 {
-private:
+  private:
 	void c_pointer();
 	void cpp_pointer();
 	void cpp_unique();
@@ -21,9 +21,8 @@ private:
 	void cpp_vectorUnique_reserved();
 	void cpp_vectorUnique_presized();
 
-public:
+  public:
 	void execute();
 };
-
 
 #endif /* ALLOCATE_H_ */

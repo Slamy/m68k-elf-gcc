@@ -10,15 +10,14 @@
 
 #include "benchmark.h"
 #include <array>
-#include <vector>
 #include <list>
-
+#include <vector>
 
 constexpr int numberOfElements = 1000;
 
 class benchmark_iterating : public benchmark
 {
-private:
+  private:
 	int arraySum_ppi();
 	int arraySum_ipp();
 	int arraySum_rangeloop();
@@ -34,9 +33,8 @@ private:
 	std::vector<int> vecnums;
 	std::list<int> listnums;
 
-public:
+  public:
 	void execute();
 };
-
 
 #endif /* ITERATING_H_ */

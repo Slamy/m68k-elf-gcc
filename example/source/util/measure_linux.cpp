@@ -1,13 +1,12 @@
+#include "measure.h"
 #include <stdlib.h>
 #include <sys/time.h>
-#include "measure.h"
 
 struct timeval tStart, tEnd;
 float elapsedTime;
 
 void printMemoryUsage()
 {
-
 }
 
 void measure_start()
@@ -22,7 +21,6 @@ void measure_end()
 	gettimeofday(&tEnd, NULL);
 
 	// compute and print the elapsed time in millisec
-	elapsedTime = (tEnd.tv_sec - tStart.tv_sec) * 1000.0 * 1000.0;  // sec to us
+	elapsedTime = (tEnd.tv_sec - tStart.tv_sec) * 1000.0 * 1000.0; // sec to us
 	elapsedTime += (tEnd.tv_usec - tStart.tv_usec);
-
 }
