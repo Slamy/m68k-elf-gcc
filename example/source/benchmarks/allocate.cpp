@@ -145,13 +145,16 @@ void benchmark_allocate::cpp_arrayUnique()
 	}
 }
 
+struct testEntry
+{
+	std::function<void(benchmark_allocate&)> func;
+	const char* name;
+	float result;
+};
+
 void benchmark_allocate::execute(FILE* out)
 {
-	static const struct
-	{
-		std::function<void(benchmark_allocate&)> func;
-		const char* name;
-	} stringtests[] = {
+	std::vector<struct testEntry> tests{{
 		{&benchmark_allocate::c_pointer, "c array of malloc'd pointers"},
 		{&benchmark_allocate::cpp_pointer, "c array of new'd pointers"},
 		{&benchmark_allocate::cpp_unique, "c array of unique pointers"},
@@ -160,31 +163,37 @@ void benchmark_allocate::execute(FILE* out)
 #ifndef BUILD_FOR_AMIGADOS
 		{&benchmark_allocate::cpp_shared, "c array of shared pointers"},
 #endif
-		{&benchmark_allocate::cpp_vectorUnique, "c++ vector of unique pointers"},
+		{&benchmark_allocate::cpp_vectorUnique, "empty c++ vector of unique pointers"},
 		{&benchmark_allocate::cpp_listUnique, "c++ list of unique pointers"},
 		{&benchmark_allocate::cpp_arrayUnique, "c++ array of unique pointers"},
 
-	};
+	}};
 
 	fprintf(out, "Allocate %d int arrays of size %d and manage them\n", numberOfAllocations, sizeOfBlock);
 
 	bool first = true;
 	float firstElapsedTime;
 
-	for (auto i : stringtests)
+	for (auto& i : tests)
 	{
 		measure_start();
 		i.func(*this);
 		measure_end();
+		i.result = elapsedTime;
+	}
 
+	std::sort(tests.begin(), tests.end(), [](auto& a, auto& b) { return a.result < b.result; });
+
+	for (auto& i : tests)
+	{
 		if (first)
 		{
 			first			 = false;
-			firstElapsedTime = elapsedTime;
+			firstElapsedTime = i.result;
 		}
 
-		float scaling = roundf((elapsedTime / firstElapsedTime) * 100.0f);
-		fprintf(out, "%40s %6d us %6d%%\n", i.name, (int)elapsedTime, (int)scaling);
+		float scaling = roundf((i.result / firstElapsedTime) * 100.0f);
+		fprintf(out, "%40s %6d us %6d%%\n", i.name, (int)i.result, (int)scaling);
 	}
 
 	fprintf(out, "\n");

@@ -233,7 +233,29 @@ These values are assumed to be faster as AmigaDOS correctly sets up the Caching 
               listsum - range loop   1419 us    142%   results verified
                 listsum - iterator   1419 us    142%   results verified
 
+# Conclusion
+
+The C++ stringstream and iostream classes should not be used!
+
+The current executable is 340 kB in size if used and 42 kB if absent. I'm not yet sure why this happens but a short search on the internet reveals that this is "normal" and libstdc++ is expected to have a size in hundreds of kB. Before, it was even bigger but the removal of Unwind and exception handling resulted in some decrease.
+
+Some people encourage the usage of libsupc++. But I've found that too much of C++ is missing this way.
+
+So if you plan to use C++ on the Amiga and plan to develop an AmigaDOS application for a system with some FastRAM I can guess that std::cout might be an option. For NDOS development I won't recommend it as space is quite valuable and printf is still a good solution for most use cases.
+
+If a big number of std::stringstream is handled I can highly discourage this as the runtime is nearly doubled compared to sprintf. Even this doesn't makes any sense as sprintf has the additional load of parsing the format string at runtime and C++ could template-magic this out of the way.
+
+The iteration tests reveal that down to the assembler level the code is nearly identical for all cases expect std::list which does make sense as the memory layout is different and the later must use pointers to get to the next entry.
+
+TODO There are some systematic differences in run-time. I'm not yet sure why this happens but investigation might be needed.
+
+On the allocation side I'm deeply confused. Malloc seems to be the fastest.
+And then shared_ptr is faster than new? And even unique_ptr is slower than shared_ptr?
+This doesn't makes any sense and I can only assume that the state of the heap as an effect on the results.
+This tests might need a remake with a fresh heap for each test and mabye also with seperate allocation and deallocation measurements.
+
 ## Disclaimer
 
 This project is provided as is. I can't held responsible for damages that it might cause on your hardware.
+I'll encourage to first try this on an emulated machine and only do this on real hardware if you know what you are doing.
 
