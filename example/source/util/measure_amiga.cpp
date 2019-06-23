@@ -7,7 +7,9 @@
 
 #include "config.h"
 
+#include <malloc.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 extern "C"
 {
@@ -50,6 +52,25 @@ void printMemoryUsage()
 #ifdef BUILD_FOR_AMIGADOS
 	printf("Available Chip Mem %lu\n", AvailMem(MEMF_CHIP));
 	printf("Available Fast Mem %lu\n", AvailMem(MEMF_FAST));
+#else
+
+	// Intersting to read but not really worth it... TODO sbrk analysis
+#if 0
+	struct mallinfo info = mallinfo();
+
+	printf("Heap Information\n");
+	printf(" arena    %lu\n", info.arena); /* total space allocated from system */
+	printf(" ordblks  %lu\n", info.ordblks);
+	printf(" smblks   %lu\n", info.smblks);
+	printf(" hblks    %lu\n", info.hblks);
+	printf(" hblkhd   %lu\n", info.hblkhd);
+	printf(" usmblks  %lu\n", info.usmblks);
+	printf(" fsmblks  %lu\n", info.fsmblks);
+	printf(" uordblks %lu\n", info.uordblks); /* total allocated space */
+	printf(" fordblks %lu\n", info.fordblks);
+	printf(" keepcost %lu\n", info.keepcost);
+#endif
+
 #endif
 }
 

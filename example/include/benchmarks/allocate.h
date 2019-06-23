@@ -20,9 +20,26 @@ class benchmark_allocate : public benchmark
 	void cpp_vectorUnique();
 	void cpp_vectorUnique_reserved();
 	void cpp_vectorUnique_presized();
+	void cpp_listUnique();
+	void cpp_arrayUnique();
+
+	int numberOfAllocations;
+	int sizeOfBlock;
 
   public:
 	void execute();
+
+	benchmark_allocate()
+	{
+		numberOfAllocations = 100;
+		sizeOfBlock			= 4;
+	}
+
+	benchmark_allocate(int allocs, int elemsize)
+	{
+		numberOfAllocations = allocs;
+		sizeOfBlock			= elemsize;
+	}
 };
 
 #endif /* ALLOCATE_H_ */

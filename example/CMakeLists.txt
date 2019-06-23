@@ -48,7 +48,7 @@ if (AMIGACROSS)
 		SET (OPTIMIZE_FLAGS "-O3 -fomit-frame-pointer ")
 	
 		SET(CMAKE_C_FLAGS " -noixemul -Wall ${OPTIMIZE_FLAGS}  ")
-		SET(CMAKE_CXX_FLAGS " -noixemul -Wall ${OPTIMIZE_FLAGS} -Iinclude -fno-exceptions ")
+		SET(CMAKE_CXX_FLAGS " -noixemul -std=c++14 -Wall ${OPTIMIZE_FLAGS} -Iinclude -fno-exceptions ")
 
 		SET(CMAKE_LINK_FLAGS " -noixemul -Wl,-Map=amibench.map ")
 	
@@ -65,7 +65,7 @@ if (AMIGACROSS)
 		SET (OPTIMIZE_FLAGS "${OPTIMIZE_FLAGS} -fomit-frame-pointer -fno-exceptions")
 	
 		SET(CMAKE_C_FLAGS " -m68000 -Wall ${OPTIMIZE_FLAGS} ")
-		SET(CMAKE_CXX_FLAGS " -m68000 -Wall ${OPTIMIZE_FLAGS} -fno-exceptions")
+		SET(CMAKE_CXX_FLAGS " -m68000 -std=c++14 -Wall ${OPTIMIZE_FLAGS} -fno-exceptions")
 		
 		SET(CMAKE_LINK_FLAGS " -m68000 -Wl,-v,--script=${CMAKE_SOURCE_DIR}/trackloaded.ld,-Map=amibench.map,--gc-sections,-flto -lm")
 		SET(CMAKE_LINK_FLAGS "${CMAKE_LINK_FLAGS} -nostdlib -lstdc++ -lc -lgcc")

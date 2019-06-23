@@ -14,6 +14,7 @@
 #include "measure.h"
 #include <iomanip>
 #include <list>
+#include <malloc.h>
 #include <numeric>
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,8 +64,6 @@ void* __dso_handle;
 
 #endif
 
-benchmark_iterating iteratingGlobal;
-
 int main(int argc, char** argv)
 {
 	// set_debug_traps();
@@ -76,13 +75,12 @@ int main(int argc, char** argv)
 
 	std::vector<std::unique_ptr<benchmark>> bmarks;
 
-	bmarks.push_back(std::make_unique<benchmark_allocate>());
+	bmarks.push_back(std::make_unique<benchmark_allocate>(50, 4));
+	bmarks.push_back(std::make_unique<benchmark_allocate>(50, 64));
 	bmarks.push_back(std::make_unique<benchmark_strings>());
 	bmarks.push_back(std::make_unique<benchmark_iterating>());
 
 	std::for_each(bmarks.begin(), bmarks.end(), [](auto& i) { i->execute(); });
-
-	iteratingGlobal.execute();
 
 	printMemoryUsage();
 

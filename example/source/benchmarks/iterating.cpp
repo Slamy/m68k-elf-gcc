@@ -7,6 +7,7 @@
 
 #include "multiplatform.h"
 
+#include "math.h"
 #include <functional>
 #include <iomanip>
 #include <memory>
@@ -152,13 +153,24 @@ void benchmark_iterating::execute()
 
 	printf("Iterate over %d ints and sum them up\n", numberOfElements);
 
+	bool first = true;
+	float firstElapsedTime;
+
 	for (auto i : sumtests)
 	{
 		measure_start();
 		int result = i.func(*this);
 		measure_end();
 
-		printf("%30s %6d %s\n", i.name, (int)elapsedTime, (result == sum ? "ok" : "invalid"));
+		if (first)
+		{
+			first			 = false;
+			firstElapsedTime = elapsedTime;
+		}
+		float scaling = roundf((elapsedTime / firstElapsedTime) * 100.0f);
+
+		printf("%30s %6d us %6d%%   %s\n", i.name, (int)elapsedTime, (int)scaling,
+			   (result == sum ? "results verified" : "invalid"));
 	}
 
 	printf("\n");

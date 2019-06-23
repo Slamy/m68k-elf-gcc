@@ -24,7 +24,9 @@ So I decided to dive a little bit deeper and try to create my own m68k-elf-gcc t
 	- Deactivation of exceptions. (Unwind code takes up much space. Exceptions leads to abort() in this case)
 	- Usage of stream type operators (like std::cout) is highly discouraged as it wastes about 300kB of memory. For systems with lots of FastRAM this might not be a big issue. But for A500 development the newlib-nano implementation of printf is much better suited. In The example project those can be enabled optionally to see the difference.
 
-## Parts of this project which was fetched from other projects
+## Parts of this project which were fetched from other projects
+
+Besides the mentionend toolchains above, I'd like to give credit and thanks to those projects
 
 - DDE5-BootLoader.S is a BootLoader and Floppy driver by [Photon](http://coppershade.org/asmskool/SOURCES/Photon-snippets/DDE5-BootLoader.S).
 - make-adf.py and sum-bootblock.py is from [this bootloader project](https://github.com/deplinenoise/trackloader).
@@ -101,4 +103,97 @@ Now execute this in another terminal
 fs-uae a1200hd.fs-uae
 ```
 AmigaDOS should pop up and then execute "m". I went for this short name as it could be type very fast.
+
+
+## Example Results of current build
+
+### NDOS on unexpanded emulated Amiga 500
+
+    Allocate 50 int arrays of size 4 and manage them
+                c array of malloc'd pointers   5784 us    100%
+                   c array of new'd pointers   7045 us    122%
+                  c array of unique pointers   7621 us    132%
+       reserve c++ vector of unique pointers   9034 us    156%
+      presized c++ vector of unique pointers   8577 us    148%
+                  c array of shared pointers   7009 us    121%
+               c++ vector of unique pointers  10146 us    175%
+                 c++ list of unique pointers  15569 us    269%
+                c++ array of unique pointers   7669 us    133%
+    
+    Allocate 50 int arrays of size 64 and manage them
+                c array of malloc'd pointers   6442 us    100%
+                   c array of new'd pointers   7723 us    120%
+                  c array of unique pointers  10361 us    161%
+       reserve c++ vector of unique pointers  12083 us    188%
+      presized c++ vector of unique pointers  11438 us    178%
+                  c array of shared pointers   7329 us    114%
+               c++ vector of unique pointers  13262 us    206%
+                 c++ list of unique pointers  19122 us    297%
+                c++ array of unique pointers  10550 us    164%
+    
+    Construct strings from 4 integers
+                           sprintf   3887 us
+            c++ stringstream build   5753 us
+    Strings ok
+    
+    Iterate over 1000 ints and sum them up
+                arraysum - for i++   1441 us    100%   results verified
+                arraysum - for ++i   1441 us    100%   results verified
+             arraysum - range loop   1441 us    100%   results verified
+            vectorsum - range loop   1442 us    100%   results verified
+         vectorsum - std::for_each   1441 us    100%   results verified
+              vectorsum - iterator   1441 us    100%   results verified
+       vectorsum - std::accumulate   1442 us    100%   results verified
+              listsum - range loop   2000 us    139%   results verified
+                listsum - iterator   1716 us    119%   results verified
+
+### NDOS on unexpanded emulated Amiga 1200
+
+    Allocate 50 int arrays of size 4 and manage them
+                c array of malloc'd pointers   5784 us    100%
+                   c array of new'd pointers   7045 us    122%
+                  c array of unique pointers   7621 us    132%
+       reserve c++ vector of unique pointers   9034 us    156%
+      presized c++ vector of unique pointers   8577 us    148%
+                  c array of shared pointers   7009 us    121%
+               c++ vector of unique pointers  10146 us    175%
+                 c++ list of unique pointers  15569 us    269%
+                c++ array of unique pointers   7669 us    133%
+    
+    Allocate 50 int arrays of size 64 and manage them
+                c array of malloc'd pointers   6442 us    100%
+                   c array of new'd pointers   7723 us    120%
+                  c array of unique pointers  10361 us    161%
+       reserve c++ vector of unique pointers  12083 us    188%
+      presized c++ vector of unique pointers  11438 us    178%
+                  c array of shared pointers   7329 us    114%
+               c++ vector of unique pointers  13262 us    206%
+                 c++ list of unique pointers  19122 us    297%
+                c++ array of unique pointers  10550 us    164%
+    
+    Construct strings from 4 integers
+                           sprintf   3887 us
+            c++ stringstream build   5753 us
+    Strings ok
+    
+    Iterate over 1000 ints and sum them up
+                arraysum - for i++   1441 us    100%   results verified
+                arraysum - for ++i   1441 us    100%   results verified
+             arraysum - range loop   1441 us    100%   results verified
+            vectorsum - range loop   1442 us    100%   results verified
+         vectorsum - std::for_each   1441 us    100%   results verified
+              vectorsum - iterator   1441 us    100%   results verified
+       vectorsum - std::accumulate   1442 us    100%   results verified
+              listsum - range loop   2000 us    139%   results verified
+                listsum - iterator   1716 us    119%   results verified
+
+
+### AmigaDOS on unexpanded emulated Amiga 1200
+
+TODO File output is currently missing.
+
+### AmigaDOS on emulated Amiga 1200 with FastRAM
+
+TODO File output is currently missing.
+
 

@@ -7,6 +7,7 @@
 
 #include "multiplatform.h"
 
+#include "math.h"
 #include <array>
 #include <functional>
 #include <iomanip>
@@ -24,16 +25,14 @@
 #include "measure.h"
 #include <allocate.h>
 
-constexpr int numberOfElements = 30;
-
 void benchmark_allocate::c_pointer()
 {
 	int i;
-	int* pointers[numberOfElements];
+	int* pointers[numberOfAllocations];
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 	{
-		pointers[i] = (int*)malloc(sizeof(int));
+		pointers[i] = (int*)malloc(sizeof(int) * sizeOfBlock);
 		if (pointers[i] == NULL)
 		{
 			printf("Failed to allocate memory\n");
@@ -41,18 +40,18 @@ void benchmark_allocate::c_pointer()
 		}
 	}
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 		free(pointers[i]);
 }
 
 void benchmark_allocate::cpp_pointer()
 {
 	int i;
-	int* pointers[numberOfElements];
+	int* pointers[numberOfAllocations];
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 	{
-		pointers[i] = new int;
+		pointers[i] = new int[sizeOfBlock];
 		if (pointers[i] == NULL)
 		{
 			printf("Failed to allocate memory\n");
@@ -60,63 +59,89 @@ void benchmark_allocate::cpp_pointer()
 		}
 	}
 
-	for (i = 0; i < numberOfElements; i++)
-		delete pointers[i];
+	for (i = 0; i < numberOfAllocations; i++)
+		delete[] pointers[i];
 }
 
 void benchmark_allocate::cpp_unique()
 {
 	int i;
-	std::unique_ptr<int> pointers[numberOfElements];
+	std::unique_ptr<int[]> pointers[numberOfAllocations];
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 	{
-		pointers[i] = std::make_unique<int>();
+		pointers[i] = std::make_unique<int[]>(sizeOfBlock);
 	}
 }
 
+// std::make_shared<int[]> doesn't seems to be yet implemented in the GCC version of bebbo toolchain
+#ifndef BUILD_FOR_AMIGADOS
 void benchmark_allocate::cpp_shared()
 {
 	int i;
-	std::shared_ptr<int> pointers[numberOfElements];
+	std::shared_ptr<int[]> pointers[numberOfAllocations];
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 	{
-		pointers[i] = std::make_shared<int>();
+		pointers[i] = std::make_shared<int[]>(sizeOfBlock);
 	}
 }
+#endif
 
 void benchmark_allocate::cpp_vectorUnique()
 {
 	int i;
-	std::vector<std::unique_ptr<int>> pointers;
+	std::vector<std::unique_ptr<int[]>> pointers;
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 	{
-		pointers.push_back(std::make_unique<int>());
+		pointers.push_back(std::make_unique<int[]>(sizeOfBlock));
 	}
 }
 
 void benchmark_allocate::cpp_vectorUnique_reserved()
 {
 	int i;
-	std::vector<std::unique_ptr<int>> pointers;
-	pointers.reserve(numberOfElements);
+	std::vector<std::unique_ptr<int[]>> pointers;
+	pointers.reserve(numberOfAllocations);
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 	{
-		pointers.push_back(std::make_unique<int>());
+		pointers.push_back(std::make_unique<int[]>(sizeOfBlock));
 	}
 }
 
 void benchmark_allocate::cpp_vectorUnique_presized()
 {
 	int i;
-	std::vector<std::unique_ptr<int>> pointers(numberOfElements);
+	std::vector<std::unique_ptr<int[]>> pointers(numberOfAllocations);
 
-	for (i = 0; i < numberOfElements; i++)
+	for (i = 0; i < numberOfAllocations; i++)
 	{
-		pointers.at(i) = std::make_unique<int>();
+		pointers.at(i) = std::make_unique<int[]>(sizeOfBlock);
+	}
+}
+
+void benchmark_allocate::cpp_listUnique()
+{
+	int i;
+	std::list<std::unique_ptr<int[]>> pointers;
+
+	for (i = 0; i < numberOfAllocations; i++)
+	{
+		pointers.push_back(std::make_unique<int[]>(sizeOfBlock));
+	}
+}
+
+// FIXME size of std::array cannot be defined with a dynamic size like the normal C array can do?
+void benchmark_allocate::cpp_arrayUnique()
+{
+	int i;
+	std::array<std::unique_ptr<int[]>, 50> pointers;
+
+	for (i = 0; i < numberOfAllocations; i++)
+	{
+		pointers[i] = std::make_unique<int[]>(sizeOfBlock);
 	}
 }
 
@@ -132,18 +157,34 @@ void benchmark_allocate::execute()
 		{&benchmark_allocate::cpp_unique, "c array of unique pointers"},
 		{&benchmark_allocate::cpp_vectorUnique_reserved, "reserve c++ vector of unique pointers"},
 		{&benchmark_allocate::cpp_vectorUnique_presized, "presized c++ vector of unique pointers"},
+#ifndef BUILD_FOR_AMIGADOS
 		{&benchmark_allocate::cpp_shared, "c array of shared pointers"},
+#endif
 		{&benchmark_allocate::cpp_vectorUnique, "c++ vector of unique pointers"},
+		{&benchmark_allocate::cpp_listUnique, "c++ list of unique pointers"},
+		{&benchmark_allocate::cpp_arrayUnique, "c++ array of unique pointers"},
+
 	};
 
-	printf("Allocate %d int pointers and manage them\n", numberOfElements);
+	printf("Allocate %d int arrays of size %d and manage them\n", numberOfAllocations, sizeOfBlock);
+
+	bool first = true;
+	float firstElapsedTime;
 
 	for (auto i : stringtests)
 	{
 		measure_start();
 		i.func(*this);
 		measure_end();
-		printf("%40s %6d\n", i.name, (int)elapsedTime);
+
+		if (first)
+		{
+			first			 = false;
+			firstElapsedTime = elapsedTime;
+		}
+
+		float scaling = roundf((elapsedTime / firstElapsedTime) * 100.0f);
+		printf("%40s %6d us %6d%%\n", i.name, (int)elapsedTime, (int)scaling);
 	}
 
 	printf("\n");

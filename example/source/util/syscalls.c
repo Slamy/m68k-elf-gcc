@@ -79,7 +79,7 @@ void* sbrk(ptrdiff_t nbytes)
 	/* The statically held previous end of the heap, with its initialization. */
 	static int* heap_ptr = (void*)&_end; /* Previous end */
 
-	// uart_printf("sbrk %d %x %x %x\n", nbytes, (int) heap_ptr, (int) &stack_start, &_end);
+	// uart_printf("sbrk %d %x %x %x\n", nbytes, (int)heap_ptr, (int)&stack_start, &_end);
 
 	if ((heap_ptr + nbytes) < &stack_start)
 	{

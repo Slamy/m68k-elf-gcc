@@ -69,7 +69,7 @@ void benchmark_strings::execute()
 		measure_start();
 		i.func(*this);
 		measure_end();
-		printf("%30s %6d\n", i.name, (int)elapsedTime);
+		printf("%30s %6d us\n", i.name, (int)elapsedTime);
 	}
 
 #ifndef DISABLE_STREAMCLASS
