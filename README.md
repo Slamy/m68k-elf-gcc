@@ -1,9 +1,10 @@
-# m68k-elf-gcc toolchain with C++ support
+# Amiga m68k-elf-gcc toolchain with C++ support
 
 ## Why ?
 
 I'm currently busy developing an Amiga game in C and wanted to give others the possibility to have an easy start into this topic.
 I believe that C can be used as an alternative to assembler even on the Motorola 68000.
+I can undergird this argument by presenting some [footage of the game](https://www.youtube.com/watch?v=k_PfDeDRdnE) in development.
 
 It turns out there are quite some good tolchains for Amiga development out here.
 I want to give credit to those I use.
@@ -19,8 +20,8 @@ So I decided to dive a little bit deeper and try to create my own m68k-elf-gcc t
 - Delivered with Bootloader and ADF construction kit for direct building of ADFs
 - Working C++ examples with C++11 style code.
 - Downsizing of newlib to save memory
-	- Removal of Floating point support of scanf and printf (I haven't found a purpose for it during development. Keep in mind that float and double datatypes are still usable and only take up space if used in the project.)
-- Downsizing of libstdc++ to save memorey
+	- Removal of floating point support of scanf and printf (I haven't found a purpose for it during development. Keep in mind that float and double datatypes are still usable and only take up space if used in the project.)
+- Downsizing of libstdc++ to save memory
 	- Deactivation of exceptions. (Unwind code takes up much space. Exceptions leads to abort() in this case)
 	- Usage of stream type operators (like std::cout) is highly discouraged as it wastes about 300kB of memory. For systems with lots of FastRAM this might not be a big issue. But for A500 development the newlib-nano implementation of printf is much better suited. In The example project those can be enabled optionally to see the difference.
 
@@ -40,11 +41,15 @@ Besides the mentionend toolchains above, I'd like to give credit and thanks to t
 	- You need to install the bebbo toolchain mentioned above as this project only produces an ELF kit.
 - You need to install some build-essentials
 	- sudo apt-get install  wget bzip2 git make tar flex bison diffutils texinfo gcc g++ libgmp-dev libmpc-dev libmpfr-dev libisl-dev
+	- TODO this list might be incomplete. Please create an issue in github if you are having problems.
 - For testing you also need an Amiga emulator. fs-uae is my currently favoured solution
     - sudo apt-get install fs-uae
 
 
 ## How to build the toolchain
+
+First you might to edit the executed script as you might want to use a different folder for installation!
+
 
 ```bash
 cd toolchain
@@ -119,7 +124,7 @@ AmigaDOS should pop up and then execute "m". I went for this short name as it co
                c++ vector of unique pointers  10146 us    175%
                  c++ list of unique pointers  15569 us    269%
                 c++ array of unique pointers   7669 us    133%
-    
+
     Allocate 50 int arrays of size 64 and manage them
                 c array of malloc'd pointers   6442 us    100%
                    c array of new'd pointers   7723 us    120%
@@ -130,12 +135,12 @@ AmigaDOS should pop up and then execute "m". I went for this short name as it co
                c++ vector of unique pointers  13262 us    206%
                  c++ list of unique pointers  19122 us    297%
                 c++ array of unique pointers  10550 us    164%
-    
+
     Construct strings from 4 integers
                            sprintf   3887 us
             c++ stringstream build   5753 us
     Strings ok
-    
+
     Iterate over 1000 ints and sum them up
                 arraysum - for i++   1441 us    100%   results verified
                 arraysum - for ++i   1441 us    100%   results verified
@@ -159,7 +164,7 @@ AmigaDOS should pop up and then execute "m". I went for this short name as it co
                c++ vector of unique pointers  10146 us    175%
                  c++ list of unique pointers  15569 us    269%
                 c++ array of unique pointers   7669 us    133%
-    
+
     Allocate 50 int arrays of size 64 and manage them
                 c array of malloc'd pointers   6442 us    100%
                    c array of new'd pointers   7723 us    120%
@@ -170,12 +175,12 @@ AmigaDOS should pop up and then execute "m". I went for this short name as it co
                c++ vector of unique pointers  13262 us    206%
                  c++ list of unique pointers  19122 us    297%
                 c++ array of unique pointers  10550 us    164%
-    
+
     Construct strings from 4 integers
                            sprintf   3887 us
             c++ stringstream build   5753 us
     Strings ok
-    
+
     Iterate over 1000 ints and sum them up
                 arraysum - for i++   1441 us    100%   results verified
                 arraysum - for ++i   1441 us    100%   results verified
@@ -190,10 +195,45 @@ AmigaDOS should pop up and then execute "m". I went for this short name as it co
 
 ### AmigaDOS on unexpanded emulated Amiga 1200
 
-TODO File output is currently missing.
+These values are assumed to be faster as AmigaDOS correctly sets up the Caching of the 68020
 
-### AmigaDOS on emulated Amiga 1200 with FastRAM
+    Allocate 50 int arrays of size 4 and manage them
+                c array of malloc'd pointers   4802 us    100%
+                   c array of new'd pointers   5274 us    110%
+                  c array of unique pointers   6967 us    145%
+       reserve c++ vector of unique pointers   6458 us    134%
+      presized c++ vector of unique pointers   6368 us    133%
+               c++ vector of unique pointers   7618 us    159%
+                 c++ list of unique pointers  11264 us    235%
+                c++ array of unique pointers   6324 us    132%
 
-TODO File output is currently missing.
+    Allocate 50 int arrays of size 64 and manage them
+                c array of malloc'd pointers   4765 us    100%
+                   c array of new'd pointers   5235 us    110%
+                  c array of unique pointers   7696 us    161%
+       reserve c++ vector of unique pointers   7257 us    152%
+      presized c++ vector of unique pointers   7181 us    151%
+               c++ vector of unique pointers   8323 us    175%
+                 c++ list of unique pointers  11678 us    245%
+                c++ array of unique pointers   7055 us    148%
 
+    Construct strings from 4 integers
+                           sprintf   1579 us
+            c++ stringstream build   3057 us
+    Strings ok
+
+    Iterate over 1000 ints and sum them up
+                arraysum - for i++   1000 us    100%   results verified
+                arraysum - for ++i    998 us    100%   results verified
+             arraysum - range loop   1138 us    114%   results verified
+            vectorsum - range loop   1139 us    114%   results verified
+         vectorsum - std::for_each   1000 us    100%   results verified
+              vectorsum - iterator   1000 us    100%   results verified
+       vectorsum - std::accumulate   1000 us    100%   results verified
+              listsum - range loop   1419 us    142%   results verified
+                listsum - iterator   1419 us    142%   results verified
+
+## Disclaimer
+
+This project is provided as is. I can't held responsible for damages that it might cause on your hardware.
 

@@ -30,7 +30,7 @@ class benchmark_strings : public benchmark
 	void carr_build();
 
   public:
-	void execute();
+	void execute(FILE* f);
 };
 
 #endif /* STRINGTESTSS_H_ */

@@ -72,6 +72,12 @@ int main(int argc, char** argv)
 #endif
 
 	printf("Slamy's Litte C vs C++ Benchmark\n");
+#ifdef BUILD_FOR_AMIGADOS
+	FILE* out = fopen("results.txt", "w");
+	printf("Please find the results in results.txt\n");
+#else
+	FILE* out = stdout;
+#endif
 
 	std::vector<std::unique_ptr<benchmark>> bmarks;
 
@@ -80,7 +86,7 @@ int main(int argc, char** argv)
 	bmarks.push_back(std::make_unique<benchmark_strings>());
 	bmarks.push_back(std::make_unique<benchmark_iterating>());
 
-	std::for_each(bmarks.begin(), bmarks.end(), [](auto& i) { i->execute(); });
+	std::for_each(bmarks.begin(), bmarks.end(), [out](auto& i) { i->execute(out); });
 
 	printMemoryUsage();
 

@@ -34,7 +34,7 @@ class benchmark_iterating : public benchmark
 	std::list<int> listnums;
 
   public:
-	void execute();
+	void execute(FILE* f);
 };
 
 #endif /* ITERATING_H_ */

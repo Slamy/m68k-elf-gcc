@@ -41,7 +41,7 @@ void benchmark_strings::stringstream_build()
 
 #endif
 
-void benchmark_strings::execute()
+void benchmark_strings::execute(FILE* out)
 {
 	const struct
 	{
@@ -62,26 +62,26 @@ void benchmark_strings::execute()
 		nums[i] = rand();
 	}
 
-	printf("Construct strings from 4 integers\n");
+	fprintf(out, "Construct strings from 4 integers\n");
 
 	for (auto i : stringtests)
 	{
 		measure_start();
 		i.func(*this);
 		measure_end();
-		printf("%30s %6d us\n", i.name, (int)elapsedTime);
+		fprintf(out, "%30s %6d us\n", i.name, (int)elapsedTime);
 	}
 
 #ifndef DISABLE_STREAMCLASS
 	if (strcmp(cppstrstr.str().c_str(), strAr))
 	{
-		printf("String failure!\n");
+		fprintf(out, "String failure!\n");
 	}
 	else
 	{
-		printf("Strings ok\n");
+		fprintf(out, "Strings ok\n");
 	}
 #endif
 
-	printf("\n");
+	fprintf(out, "\n");
 }

@@ -117,7 +117,7 @@ int benchmark_iterating::listSum_iterator()
 	return sum;
 }
 
-void benchmark_iterating::execute()
+void benchmark_iterating::execute(FILE* out)
 {
 	const struct
 	{
@@ -135,8 +135,8 @@ void benchmark_iterating::execute()
 		{&benchmark_iterating::listSum_iterator, "listsum - iterator"},
 	};
 
-	// printf("listnums size : %lu\n",listnums.size());
-	// printf("listnums size : %lu\n",listnums.size());
+	// fprintf(out,"listnums size : %lu\n",listnums.size());
+	// fprintf(out,"listnums size : %lu\n",listnums.size());
 
 	size_t i;
 	int sum = 0;
@@ -148,10 +148,10 @@ void benchmark_iterating::execute()
 		listnums.push_back(nums[i]);
 		sum += nums[i];
 	}
-	// printf("vecnums size : %lu\n",vecnums.size());
-	// printf("listnums size : %lu  %d\n",listnums.size(), listnums.front());
+	// fprintf(out,"vecnums size : %lu\n",vecnums.size());
+	// fprintf(out,"listnums size : %lu  %d\n",listnums.size(), listnums.front());
 
-	printf("Iterate over %d ints and sum them up\n", numberOfElements);
+	fprintf(out, "Iterate over %d ints and sum them up\n", numberOfElements);
 
 	bool first = true;
 	float firstElapsedTime;
@@ -169,9 +169,9 @@ void benchmark_iterating::execute()
 		}
 		float scaling = roundf((elapsedTime / firstElapsedTime) * 100.0f);
 
-		printf("%30s %6d us %6d%%   %s\n", i.name, (int)elapsedTime, (int)scaling,
-			   (result == sum ? "results verified" : "invalid"));
+		fprintf(out, "%30s %6d us %6d%%   %s\n", i.name, (int)elapsedTime, (int)scaling,
+				(result == sum ? "results verified" : "invalid"));
 	}
 
-	printf("\n");
+	fprintf(out, "\n");
 }

@@ -145,7 +145,7 @@ void benchmark_allocate::cpp_arrayUnique()
 	}
 }
 
-void benchmark_allocate::execute()
+void benchmark_allocate::execute(FILE* out)
 {
 	static const struct
 	{
@@ -166,7 +166,7 @@ void benchmark_allocate::execute()
 
 	};
 
-	printf("Allocate %d int arrays of size %d and manage them\n", numberOfAllocations, sizeOfBlock);
+	fprintf(out, "Allocate %d int arrays of size %d and manage them\n", numberOfAllocations, sizeOfBlock);
 
 	bool first = true;
 	float firstElapsedTime;
@@ -184,8 +184,8 @@ void benchmark_allocate::execute()
 		}
 
 		float scaling = roundf((elapsedTime / firstElapsedTime) * 100.0f);
-		printf("%40s %6d us %6d%%\n", i.name, (int)elapsedTime, (int)scaling);
+		fprintf(out, "%40s %6d us %6d%%\n", i.name, (int)elapsedTime, (int)scaling);
 	}
 
-	printf("\n");
+	fprintf(out, "\n");
 }

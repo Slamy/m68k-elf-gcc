@@ -8,10 +8,12 @@
 #ifndef INCLUDE_BENCHMARKS_BENCHMARK_H_
 #define INCLUDE_BENCHMARKS_BENCHMARK_H_
 
+#include <stdio.h>
+
 class benchmark
 {
   public:
-	virtual void execute(){};
+	virtual void execute(FILE* f){};
 	benchmark()
 	{
 	}

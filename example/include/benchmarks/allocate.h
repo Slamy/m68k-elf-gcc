@@ -27,7 +27,7 @@ class benchmark_allocate : public benchmark
 	int sizeOfBlock;
 
   public:
-	void execute();
+	void execute(FILE* f);
 
 	benchmark_allocate()
 	{
