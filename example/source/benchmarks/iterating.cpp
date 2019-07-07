@@ -20,8 +20,41 @@
 
 #include <algorithm> //algorithm must be included latest for bebbo toolchain
 
+#include "external.h"
 #include "iterating.h"
 #include "measure.h"
+
+incrementer incer;
+
+int benchmark_iterating::callCFunc()
+{
+	size_t i;
+	for (i = 0; i < 1000; ++i)
+	{
+		c_increment();
+	}
+	return 0;
+}
+
+int benchmark_iterating::callCFuncCppFootprint()
+{
+	size_t i;
+	for (i = 0; i < 1000; ++i)
+	{
+		c_increment_cppFootprint(&incer);
+	}
+	return 0;
+}
+
+int benchmark_iterating::callCppFunc()
+{
+	size_t i;
+	for (i = 0; i < 1000; ++i)
+	{
+		incer.increment();
+	}
+	return 0;
+}
 
 int benchmark_iterating::arraySum_ppi()
 {
@@ -133,6 +166,10 @@ void benchmark_iterating::execute(FILE* out)
 		{&benchmark_iterating::vectorSum_accumulate, "vectorsum - std::accumulate"},
 		{&benchmark_iterating::listSum_rangeloop, "listsum - range loop"},
 		{&benchmark_iterating::listSum_iterator, "listsum - iterator"},
+		{&benchmark_iterating::callCFunc, "1000x calling C func"},
+		{&benchmark_iterating::callCppFunc, "1000x calling C++ func"},
+		{&benchmark_iterating::callCFuncCppFootprint, "1000x calling C with one ptr"},
+
 	};
 
 	// fprintf(out,"listnums size : %lu\n",listnums.size());

@@ -18,6 +18,7 @@ SET (SOURCES
 	source/benchmarks/allocate.cpp
 	source/benchmarks/iterating.cpp
 	source/benchmarks/stringtests.cpp
+	source/benchmarks/external.cpp
 )
 
 #create listing files
@@ -46,6 +47,7 @@ if (AMIGACROSS)
 		MESSAGE( STATUS "Build for AmigaDOS")
 		
 		SET (OPTIMIZE_FLAGS "-O3 -fomit-frame-pointer ")
+		#SET (OPTIMIZE_FLAGS "-g -fomit-frame-pointer ")
 	
 		SET(CMAKE_C_FLAGS " -noixemul -Wall ${OPTIMIZE_FLAGS}  ")
 		SET(CMAKE_CXX_FLAGS " -noixemul -std=c++14 -Wall ${OPTIMIZE_FLAGS} -Iinclude -fno-exceptions ")
@@ -63,6 +65,7 @@ if (AMIGACROSS)
 		
 		SET (OPTIMIZE_FLAGS "-O3 -Werror -ffunction-sections ")
 		SET (OPTIMIZE_FLAGS "${OPTIMIZE_FLAGS} -fomit-frame-pointer -fno-exceptions")
+		#SET (OPTIMIZE_FLAGS "-g -fomit-frame-pointer ")
 	
 		SET(CMAKE_C_FLAGS " -m68000 -Wall ${OPTIMIZE_FLAGS} ")
 		SET(CMAKE_CXX_FLAGS " -m68000 -std=c++14 -Wall ${OPTIMIZE_FLAGS} -fno-exceptions")

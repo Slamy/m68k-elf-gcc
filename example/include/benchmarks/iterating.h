@@ -27,6 +27,9 @@ class benchmark_iterating : public benchmark
 	int vectorSum_accumulate();
 	int listSum_rangeloop();
 	int listSum_iterator();
+	int callCFunc();
+	int callCppFunc();
+	int callCFuncCppFootprint();
 
 	int nums[numberOfElements];
 	std::array<int, numberOfElements> cpparraynums;
