@@ -12,6 +12,7 @@
 #endif
 
 #include "measure.h"
+#include <gsl/span>
 #include <iomanip>
 #include <list>
 #include <malloc.h>
@@ -64,6 +65,24 @@ void* __dso_handle;
 
 #endif
 
+template <size_t SIZE> void printArray(std::array<int, SIZE>& arr)
+{
+	for (auto i : arr)
+	{
+		printf("%d ", i);
+	}
+	printf("\n");
+}
+
+void printArray2(gsl::span<int> arr)
+{
+	for (auto i : arr)
+	{
+		printf("%d ", i);
+	}
+	printf("\n");
+}
+
 int main(int argc, char** argv)
 {
 	// set_debug_traps();
@@ -72,6 +91,20 @@ int main(int argc, char** argv)
 #endif
 
 	printf("Slamy's Litte C vs C++ Benchmark\n");
+
+	std::array<int, 10> a{{1, 2, 3, 4}};
+	std::array<int, 5> b{{1, 2, 3, 4}};
+	std::array<int, 6> c{{1, 2, 3, 4}};
+	std::array<int, 100> d{{1, 2, 3, 4}};
+	printArray(a);
+	printArray(b);
+	printArray(c);
+	printArray(d);
+	printArray2(a);
+	printArray2(b);
+	printArray2(c);
+	printArray2(d);
+	return 0;
 #ifdef BUILD_FOR_AMIGADOS
 	FILE* out = fopen("results.txt", "w");
 	printf("Please find the results in results.txt\n");
