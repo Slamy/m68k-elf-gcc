@@ -3,7 +3,7 @@
 TARGETARCHITECTURE=m68k-elf
 
 # Configure your path
-HOSTINSTALLPATH="/opt/m68k-elf.slamy2/"
+HOSTINSTALLPATH="/opt/m68k-elf.slamy3"
 
 # Configure as much as you like
 MAKE_JOBS=4
@@ -42,8 +42,12 @@ function build_binutils () {
 	mkdir -p build
 	cd build
 	
-	BINUTILSFLAGS+=" --target=$TARGETARCHITECTURE --prefix=$HOSTINSTALLPATH/" 
-	../configure $BINUTILSFLAGS
+
+	../configure \
+		--target=$TARGETARCHITECTURE \
+		--prefix=$HOSTINSTALLPATH/ \
+		--with-headers=../../newlib-3.1.0/newlib/libc/include/
+	
 	make -j$MAKE_JOBS
 	make install
 	cd ../..
@@ -83,6 +87,7 @@ function build_bootstrap_gcc () {
 		--disable-nls \
 		--disable-libstdcxx-threads \
 		--disable-multilib \
+		--with-headers=../../newlib-3.1.0/newlib/libc/include/ \
 		--enable-cxx-flags='-fomit-frame-pointer -ffunction-sections -fno-exceptions'
 		
 	#build only gcc
@@ -106,7 +111,8 @@ function build_newlib () {
 		--enable-newlib-nano-formatted-io \
 		--disable-newlib-io-float \
 		--disable-newlib-supplied-syscalls \
-		--enable-languages=c,c++
+		--enable-languages=c,c++ \
+		--with-headers=../../newlib-3.1.0/newlib/libc/include/
 		
 	make -j$MAKE_JOBS
 	make install
