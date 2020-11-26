@@ -1,12 +1,12 @@
 #!/bin/bash
 
-TARGETARCHITECTURE=m68k-elf
+TARGETARCHITECTURE=mipsel-elf
 
 # Configure your path
-HOSTINSTALLPATH="/opt/m68k-elf.slamy3"
+HOSTINSTALLPATH="/opt/mipsel-elf.slamy"
 
 # Configure as much as you like
-MAKE_JOBS=4
+MAKE_JOBS=${nproc}
 
 if [ ! -d "$HOSTINSTALLPATH" ]; then
 	echo Please create $HOSTINSTALLPATH and give the current user write rights to it
@@ -46,7 +46,8 @@ function build_binutils () {
 	../configure \
 		--target=$TARGETARCHITECTURE \
 		--prefix=$HOSTINSTALLPATH/ \
-		--with-headers=../../newlib-3.1.0/newlib/libc/include/
+		--with-headers=../../newlib-3.1.0/newlib/libc/include/ \
+		--with-float=soft
 	
 	make -j$MAKE_JOBS
 	make install
@@ -73,7 +74,6 @@ function build_bootstrap_gcc () {
 	../configure \
 		--target=$TARGETARCHITECTURE \
 		--prefix=$HOSTINSTALLPATH \
-		--with-cpu=m68000 \
 		--enable-languages=c,c++ \
 		--disable-bootstrap \
 		--with-newlib \
@@ -84,6 +84,7 @@ function build_bootstrap_gcc () {
 		--disable-threads \
 		--with-gnu-as \
 		--with-gnu-ld \
+		--with-float=soft \
 		--disable-nls \
 		--disable-libstdcxx-threads \
 		--disable-multilib \
@@ -106,10 +107,10 @@ function build_newlib () {
 	../configure \
 		--target=$TARGETARCHITECTURE \
 		--prefix=$HOSTINSTALLPATH \
-		--with-cpu=m68000 \
 		--disable-multilib \
 		--enable-newlib-nano-formatted-io \
 		--disable-newlib-io-float \
+		--with-float=soft \
 		--disable-newlib-supplied-syscalls \
 		--enable-languages=c,c++ \
 		--with-headers=../../newlib-3.1.0/newlib/libc/include/
